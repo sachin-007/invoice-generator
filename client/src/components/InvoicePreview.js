@@ -18,7 +18,7 @@ const generatePdf = () => {
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4"); // Portrait mode, A4 size
       const imgWidth = 210; // A4 width in mm
-      const pageHeight = 295; // A4 height in mm
+      const pageHeight = 320; // A4 height in mm
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       const heightLeft = imgHeight;
 
@@ -101,20 +101,18 @@ const InvoicePreview = ({ invoiceData, pdfUrl }) => {
             alt="Company Logo"
             className="w-32 h-32 mb-4"
             style={{
-              width: "200px",
-              height: "50px",
-              // This ensures the aspect ratio is maintained and the image isn't distorted
+              width: "300px",
+              height: "100px",
+              objectFit: "cover",
             }}
           />
         )}
 
         <div style={{ textAlign: "right" }}>
           <p>
-            <strong>Sold By :</strong> {invoiceData.sellerName}
+            <strong>Tax invoice/Bill of Supply/Cash Meme</strong>
           </p>
-          <p>{invoiceData.sellerAddress.replace(/\n/g, ", ")}</p>
-          <p>PAN: {invoiceData.sellerPAN}</p>
-          <p>GST: {invoiceData.sellerGST}</p>
+          <p>(Original for Recipient)</p>
         </div>
       </div>
 
@@ -127,19 +125,42 @@ const InvoicePreview = ({ invoiceData, pdfUrl }) => {
             gap: "24px",
           }}
         >
+          <div style={{ textAlign: "left" }}>
+            <p>
+              <strong>Sold By :</strong> {invoiceData.sellerName}
+            </p>
+            <p>{invoiceData.sellerAddress.replace(/\n/g, ", ")}</p>
+            <p style={{ fontSize: "16px" }}>
+              <strong>PAN No : </strong>
+              {invoiceData.sellerPAN}
+            </p>
+            <p>
+              {" "}
+              <strong>GST Reg No: </strong>
+              {invoiceData.sellerGST}
+            </p>
+          </div>
+
           <div>
             <h3 style={{ fontSize: "16px", fontWeight: "bold" }}>
               Billing Address
             </h3>
             <p>{invoiceData.billingName}</p>
             <p>{invoiceData.billingAddress.replace(/\n/g, ", ")}</p>
+            <p>
+              <strong>State/UT Code : </strong> {invoiceData.code}
+            </p>
           </div>
-          <div>
+          <div></div>
+          <div style={{ textAlign: "left", marginRight: 25 }}>
             <h3 style={{ fontSize: "16px", fontWeight: "bold" }}>
               Shipping Address
             </h3>
             <p>{invoiceData.shippingName}</p>
             <p>{invoiceData.shippingAddress.replace(/\n/g, ", ")}</p>
+            <p>
+              <strong>State/UT Code : </strong> {invoiceData.code}
+            </p>
           </div>
         </div>
       </div>
@@ -256,43 +277,34 @@ const InvoicePreview = ({ invoiceData, pdfUrl }) => {
 
       {invoiceData.signature && (
         <div className="mt-8">
-          <h2 className="text-xl font-semibold right-0">
-            Authorized Signature
+          <h2 className="text-xl font-semibold right-0 text-end">
+            For {invoiceData.sellerName} :
           </h2>
-          {/* <img
-            style={{
-              width: "250px",
-              height: "35px",
-              textAlign: "right",
-              // This ensures the aspect ratio is maintained and the image isn't distorted
-            }}
-            src={invoiceData.signature}
-            alt="Signature"
-            className="w-32 h-32"
-          /> */}
           <div
             style={{
               display: "flex",
               justifyContent: "flex-end",
-              marginTop: "20px",
+              marginTop: "10px",
             }}
           >
             <img
               style={{
-                width: "300px", // Adjusted to 50px width
-                height: "35px", // Adjusted to 50px height
+                width: "300px",
+                height: "40px",
+                objectFit: "cover",
+                border: "1px solid #000", // Add a solid border with black color and 2px width
+                borderRadius: "1px", // Optional: adds slightly rounded corners
+                padding: "1px", // Optional: adds padding inside the border
               }}
               src={invoiceData.signature}
               alt="Signature"
             />
           </div>
+          <h2 className="text-xl font-semibold right-0 text-end">
+            Authorized Signature
+          </h2>
         </div>
       )}
-      {/* Payment Terms */}
-      <div style={{ marginBottom: "24px" }}>
-        <h3 style={{ fontSize: "16px", fontWeight: "bold" }}>Payment Terms</h3>
-        <p>{invoiceData.paymentTerms}</p>
-      </div>
 
       {/* Render uploaded signature */}
       {/* {signature && <img src={signature} alt="Signature" style={{ maxWidth: '150px', marginTop: '20px' }} />} */}
