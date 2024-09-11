@@ -1,4 +1,3 @@
-// Import libraries at the top
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import React, { useState,useEffect } from "react";
@@ -8,17 +7,15 @@ const generatePdf = () => {
   const button = document.getElementById("generate-pdf-button");
 
   if (input) {
-    // Hide the button and any other unwanted elements
     if (button) {
       button.style.display = "none";
     }
 
-    // Use html2canvas to capture the content
     html2canvas(input, { scale: 2 }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4"); // Portrait mode, A4 size
-      const imgWidth = 210; // A4 width in mm
-      const pageHeight = 320; // A4 height in mm
+      const pdf = new jsPDF("p", "mm", "a4"); 
+      const imgWidth = 210; 
+      const pageHeight = 320; 
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       const heightLeft = imgHeight;
 
@@ -35,8 +32,6 @@ const generatePdf = () => {
       }
 
       pdf.save("invoice.pdf");
-
-      // Show the button again after generating the PDF
       if (button) {
         button.style.display = "block";
       }
@@ -45,20 +40,6 @@ const generatePdf = () => {
 };
 
 const InvoicePreview = ({ invoiceData, pdfUrl }) => {
-  // Generate PDF
-  // const generatePdf = () => {
-  //   const input = document.getElementById('invoice-preview');
-  //   html2canvas(input, { scale: 2 }).then((canvas) => {
-  //     const imgData = canvas.toDataURL('image/png');
-  //     const pdf = new jsPDF({
-  //       orientation: 'portrait',
-  //       unit: 'px',
-  //       format: [canvas.width, canvas.height],
-  //     });
-  //     pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-  //     pdf.save('invoice.pdf');
-  //   });
-  // };
 
 
   return (
@@ -81,20 +62,6 @@ const InvoicePreview = ({ invoiceData, pdfUrl }) => {
           marginBottom: "16px",
         }}
       >
-        {/* <div style={{ marginBottom: '10px' }}>
-        <label>Upload Logo:</label>
-        <input type="file" accept="image/*" onChange={handleLogoUpload} />
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <label>Upload Signature:</label>
-        <input type="file" accept="image/*" onChange={handleSignatureUpload} />
-      </div> */}
-
-        {/* <img
-          src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"
-          alt="Amazon Logo"
-          style={{ height: "50px" }}
-        /> */}
 
         {invoiceData.logo && (
           <img
@@ -293,9 +260,9 @@ const InvoicePreview = ({ invoiceData, pdfUrl }) => {
                 width: "300px",
                 height: "40px",
                 objectFit: "cover",
-                border: "1px solid #000", // Add a solid border with black color and 2px width
-                borderRadius: "1px", // Optional: adds slightly rounded corners
-                padding: "1px", // Optional: adds padding inside the border
+                border: "1px solid #000",
+                borderRadius: "1px",
+                padding: "1px", 
               }}
               src={invoiceData.signature}
               alt="Signature"
@@ -307,31 +274,7 @@ const InvoicePreview = ({ invoiceData, pdfUrl }) => {
         </div>
       )}
 
-      {/* Render uploaded signature */}
-      {/* {signature && <img src={signature} alt="Signature" style={{ maxWidth: '150px', marginTop: '20px' }} />} */}
-
-      {/* Generate PDF Button */}
-      {/* {pdfUrl && (
-        <div style={{ textAlign: "right" }}>
-          <button
-            id="generate-pdf-button"
-            onClick={generatePdf}
-            style={{
-              backgroundColor: "#4CAF50",
-              color: "white",
-              fontWeight: "bold",
-              padding: "10px 20px",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
-            Generate PDF
-          </button>
-        </div>
-      )} */}
-
-
-      {/* Generate PDF Button (Unconditionally Rendered) */}
+     
       <div style={{ textAlign: "left" }}>
         <button
           id="generate-pdf-button"

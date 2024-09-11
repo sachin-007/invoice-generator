@@ -19,8 +19,8 @@ const InvoiceForm = ({ onSubmit }) => {
     placeOfSupply: "",
     placeOfDelivery: "",
     items: [{ description: "", unitPrice: "", quantity: "", taxRate: "" }],
-    logo: null, // New field for logo
-    signature: null, // New field for signature
+    logo: null, 
+    signature: null, 
   });
 
   const handleInputChange = (e) => {
@@ -43,14 +43,14 @@ const InvoiceForm = ({ onSubmit }) => {
     });
   };
 
-  // Handle file uploads for logo and signature
+  
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
     reader.onloadend = () => {
-      setInvoiceData({ ...invoiceData, [e.target.name]: reader.result }); // Save the Base64 data
+      setInvoiceData({ ...invoiceData, [e.target.name]: reader.result }); 
     };
-    reader.readAsDataURL(file); // Convert file to Base64
+    reader.readAsDataURL(file); 
   };
 
   const handleSubmit = (e) => {
@@ -73,9 +73,9 @@ const InvoiceForm = ({ onSubmit }) => {
       shippingAddress:
         "Eurofins IT Solutions India Pvt Ltd., 1st Floor,\nMaruti Platinum, Lakshminarayana Pura, AECS\nLayout\nBENGALURU, KARNATAKA, 560037\nIN",
       orderNumber: "555454",
-      orderDate: "2023-09-11", // Add the current date
+      orderDate: "2023-09-11", 
       invoiceNumber: "6545",
-      invoiceDate: "2023-09-11", // Add the current date
+      invoiceDate: "2023-09-11", 
       stateCode: "29",
       placeOfSupply: "KARNATAKA",
       placeOfDelivery: "KARNATAKA",
@@ -87,8 +87,8 @@ const InvoiceForm = ({ onSubmit }) => {
           taxRate: 5,
         },
       ],
-      logo: "logo.png", // Ensure this is the correct path
-      signature: "/signature.png", // Ensure this is the correct path
+      logo: "logo.png", 
+      signature: "/signature.png", 
     });
   };
 

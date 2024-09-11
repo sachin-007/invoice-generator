@@ -6,33 +6,33 @@ exports.generatePDF = (invoiceData) => {
   doc.on('data', buffers.push.bind(buffers));
   doc.on('end', () => {});
 
-  // Add company logo placeholder
+  
   doc.rect(50, 50, 100, 50).stroke();
   doc.text('Company Logo', 70, 70);
   
-  // Add seller details
+  
   doc.text(`Sold By: ${invoiceData.sellerName}`, 50, 120);
   doc.text(invoiceData.sellerAddress, 50, 140);
   doc.text(`PAN No: ${invoiceData.sellerPAN}`, 50, 160);
   doc.text(`GST Registration No: ${invoiceData.sellerGST}`, 50, 180);
   
-  // Add billing details
+  
   doc.text(`Billing Address:`, 300, 120);
   doc.text(invoiceData.billingName, 300, 140);
   doc.text(invoiceData.billingAddress, 300, 160);
   
-  // Add shipping details
+  
   doc.text(`Shipping Address:`, 300, 200);
   doc.text(invoiceData.shippingName, 300, 220);
   doc.text(invoiceData.shippingAddress, 300, 240);
   
-  // Add order and invoice details
+  
   doc.text(`Order Number: ${invoiceData.orderNumber}`, 50, 280);
   doc.text(`Order Date: ${invoiceData.orderDate}`, 50, 300);
   doc.text(`Invoice Number: ${invoiceData.invoiceNumber}`, 300, 280);
   doc.text(`Invoice Date: ${invoiceData.invoiceDate}`, 300, 300);
   
-  // Add item details table
+  
   const startY = 350;
   doc.text('Description', 50, startY);
   doc.text('Unit Price', 200, startY);
@@ -55,13 +55,13 @@ exports.generatePDF = (invoiceData) => {
     currentY += 20;
   });
   
-  // Add total
+  
   doc.text(`Total: ${invoiceData.total}`, 520, currentY + 20);
   
-  // Add amount in words
+  
   doc.text(`Amount in Words: ${invoiceData.amountInWords}`, 50, currentY + 60);
   
-  // Add signature
+  
   doc.text('For Varasiddhi Silk Exports:', 400, currentY + 100);
   doc.rect(400, currentY + 120, 150, 50).stroke();
   doc.text('Authorized Signatory', 420, currentY + 180);
