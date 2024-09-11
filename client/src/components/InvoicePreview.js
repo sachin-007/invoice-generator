@@ -1,7 +1,7 @@
 // Import libraries at the top
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 
 const generatePdf = () => {
   const input = document.getElementById("invoice-preview");
@@ -60,6 +60,7 @@ const InvoicePreview = ({ invoiceData, pdfUrl }) => {
   //   });
   // };
 
+
   return (
     <div
       id="invoice-preview"
@@ -99,11 +100,11 @@ const InvoicePreview = ({ invoiceData, pdfUrl }) => {
           <img
             src={invoiceData.logo}
             alt="Company Logo"
-            className="w-32 h-32 mb-4"
+            className="w-32 h-32 mb-4 ml-15"
             style={{
               width: "300px",
               height: "100px",
-              objectFit: "cover",
+              objectFit: "contain",
             }}
           />
         )}
@@ -263,13 +264,13 @@ const InvoicePreview = ({ invoiceData, pdfUrl }) => {
 
       {/* Totals Section */}
       <div style={{ marginBottom: "24px" }}>
-        <h3 style={{ fontSize: "16px", fontWeight: "bold" }}>Totals</h3>
+        {/* <h3 style={{ fontSize: "16px", fontWeight: "bold" }}>Totals</h3>
         <p>
           <strong>Subtotal:</strong> {Number(invoiceData.subtotal).toFixed(2)}
         </p>
         <p>
           <strong>Tax:</strong> {Number(invoiceData.tax).toFixed(2)}
-        </p>
+        </p> */}
         <p>
           <strong>Total:</strong> {Number(invoiceData.total).toFixed(2)}
         </p>
@@ -277,7 +278,7 @@ const InvoicePreview = ({ invoiceData, pdfUrl }) => {
 
       {invoiceData.signature && (
         <div className="mt-8">
-          <h2 className="text-xl font-semibold right-0 text-end">
+          <h2 className="text-m font-semibold right-0 text-end">
             For {invoiceData.sellerName} :
           </h2>
           <div
@@ -300,7 +301,7 @@ const InvoicePreview = ({ invoiceData, pdfUrl }) => {
               alt="Signature"
             />
           </div>
-          <h2 className="text-xl font-semibold right-0 text-end">
+          <h2 className="text-m font-semibold right-0 text-end">
             Authorized Signature
           </h2>
         </div>
@@ -310,7 +311,7 @@ const InvoicePreview = ({ invoiceData, pdfUrl }) => {
       {/* {signature && <img src={signature} alt="Signature" style={{ maxWidth: '150px', marginTop: '20px' }} />} */}
 
       {/* Generate PDF Button */}
-      {pdfUrl && (
+      {/* {pdfUrl && (
         <div style={{ textAlign: "right" }}>
           <button
             id="generate-pdf-button"
@@ -327,7 +328,26 @@ const InvoicePreview = ({ invoiceData, pdfUrl }) => {
             Generate PDF
           </button>
         </div>
-      )}
+      )} */}
+
+
+      {/* Generate PDF Button (Unconditionally Rendered) */}
+      <div style={{ textAlign: "left" }}>
+        <button
+          id="generate-pdf-button"
+          onClick={generatePdf}
+          style={{
+            backgroundColor: "#4CAF50",
+            color: "white",
+            fontWeight: "bold",
+            padding: "10px 20px",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+        >
+          Generate PDF
+        </button>
+      </div>
     </div>
   );
 };

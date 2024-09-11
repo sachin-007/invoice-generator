@@ -3,25 +3,22 @@ import { calculateInvoice } from "../utils/invoiceCalculations";
 
 const InvoiceForm = ({ onSubmit }) => {
   const [invoiceData, setInvoiceData] = useState({
-    sellerName: "Varasiddhi Silk Exports",
-    sellerAddress:
-      "75, 3rd Cross, Lalbagh Road\nBENGALURU, KARNATAKA, 560027\nIN",
-    sellerPAN: "AACFV3325K",
-    sellerGST: "29AACFV3325K1ZY",
-    billingName: "Madhu B",
-    billingAddress:
-      "Eurofins IT Solutions India Pvt Ltd., 1st Floor,\nMaruti Platinum, Lakshminarayana Pura, AECS\nLayout\nBENGALURU, KARNATAKA, 560037\nIN",
-    shippingName: "Madhu B",
-    shippingAddress:
-      "Eurofins IT Solutions India Pvt Ltd., 1st Floor,\nMaruti Platinum, Lakshminarayana Pura, AECS\nLayout\nBENGALURU, KARNATAKA, 560037\nIN",
-    orderNumber: "555454",
+    sellerName: "",
+    sellerAddress:"",
+    sellerPAN: "",
+    sellerGST: "",
+    billingName: "",
+    billingAddress:"",
+    shippingName: "",
+    shippingAddress:"",
+    orderNumber: "",
     orderDate: "",
-    invoiceNumber: "6545",
+    invoiceNumber: "",
     invoiceDate: "",
-    stateCode: "29",
-    placeOfSupply: "KARNATAKA",
-    placeOfDelivery: "KARNATAKA",
-    items: [{ description: "", unitPrice: 4000000, quantity: 10, taxRate: 5 }],
+    stateCode: "",
+    placeOfSupply: "",
+    placeOfDelivery: "",
+    items: [{ description: "", unitPrice: "", quantity: "", taxRate: "" }],
     logo: null, // New field for logo
     signature: null, // New field for signature
   });
@@ -62,11 +59,59 @@ const InvoiceForm = ({ onSubmit }) => {
     onSubmit(calculatedInvoiceData);
   };
 
+  const handleAutoFill = () => {
+    setInvoiceData({
+      sellerName: "Varasiddhi Silk Exports",
+      sellerAddress:
+        "75, 3rd Cross, Lalbagh Road\nBENGALURU, KARNATAKA, 560027\nIN",
+      sellerPAN: "AACFV3325K",
+      sellerGST: "29AACFV3325K1ZY",
+      billingName: "Madhu B",
+      billingAddress:
+        "Eurofins IT Solutions India Pvt Ltd., 1st Floor,\nMaruti Platinum, Lakshminarayana Pura, AECS\nLayout\nBENGALURU, KARNATAKA, 560037\nIN",
+      shippingName: "Madhu B",
+      shippingAddress:
+        "Eurofins IT Solutions India Pvt Ltd., 1st Floor,\nMaruti Platinum, Lakshminarayana Pura, AECS\nLayout\nBENGALURU, KARNATAKA, 560037\nIN",
+      orderNumber: "555454",
+      orderDate: "2023-09-11", // Add the current date
+      invoiceNumber: "6545",
+      invoiceDate: "2023-09-11", // Add the current date
+      stateCode: "29",
+      placeOfSupply: "KARNATAKA",
+      placeOfDelivery: "KARNATAKA",
+      items: [
+        {
+          description: "Product XYZ",
+          unitPrice: 4000000,
+          quantity: 10,
+          taxRate: 5,
+        },
+      ],
+      logo: "logo.png", // Ensure this is the correct path
+      signature: "/signature.png", // Ensure this is the correct path
+    });
+  };
+
   return (
+    <>
+    <button style={{
+      margin:"10px",
+    backgroundColor: "#4CAF50",
+    color: "white",
+    padding: "10px 20px",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    fontSize: "16px",
+    fontWeight: "bold",
+  }} onClick={handleAutoFill}>Auto Fill Invoice</button>
+    
     <form
       onSubmit={handleSubmit}
       className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
     >
+
+
       <div className="mb-4">
         <div className="mb-4">
           <h2 className="text-2xl font-bold mb-2">Upload Logo</h2>
@@ -81,7 +126,10 @@ const InvoiceForm = ({ onSubmit }) => {
             <img
               src={invoiceData.logo}
               alt="Logo Preview"
-              className="w-32 h-32 mb-2"
+              style={{
+                width:300,
+                height:100
+              }}
             />
           )}{" "}
           {/* Logo Preview */}
@@ -290,7 +338,10 @@ const InvoiceForm = ({ onSubmit }) => {
             <img
               src={invoiceData.signature}
               alt="Signature Preview"
-              className="w-32 h-32 mb-2"
+              style={{
+                width:300,
+                height:40
+              }}
             />
           )}{" "}
           {/* Signature Preview */}
@@ -311,6 +362,8 @@ const InvoiceForm = ({ onSubmit }) => {
         Generate Invoice
       </button>
     </form>
+    </>
+
   );
 };
 
