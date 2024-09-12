@@ -1,6 +1,7 @@
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-import React, { useState,useEffect } from "react";
+import React from "react";
+import { useLocation } from "react-router-dom";
 
 const generatePdf = () => {
   const input = document.getElementById("invoice-preview");
@@ -15,20 +16,19 @@ const generatePdf = () => {
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4"); 
       const imgWidth = 210; 
-      const pageHeight = 320; 
+      const pageHeight = 295; // Adjust to A4 size
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      const heightLeft = imgHeight;
+      let heightLeft = imgHeight;
 
       let position = 0;
       pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
 
-      if (heightLeft > pageHeight) {
-        let yPosition = -pageHeight;
-        while (heightLeft > 0) {
-          yPosition = yPosition + pageHeight;
-          pdf.addPage();
-          pdf.addImage(imgData, "PNG", 0, yPosition, imgWidth, imgHeight);
-        }
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
       }
 
       pdf.save("invoice.pdf");
@@ -39,8 +39,12 @@ const generatePdf = () => {
   }
 };
 
-const InvoicePreview = ({ invoiceData, pdfUrl }) => {
+const InvoicePreview = () => {
+  const location = useLocation();
+  const { invoiceData } = location.state || {}; // Access the state from the location
 
+  console.log('maindata',invoiceData);
+  
 
   return (
     <div
@@ -62,23 +66,26 @@ const InvoicePreview = ({ invoiceData, pdfUrl }) => {
           marginBottom: "16px",
         }}
       >
-
-        {invoiceData.logo && (
-          <img
-            src={invoiceData.logo}
-            alt="Company Logo"
-            className="w-32 h-32 mb-4 ml-15"
-            style={{
-              width: "300px",
-              height: "100px",
-              objectFit: "contain",
-            }}
-          />
-        )}
-
+        {/* Header Section */}
+      {/* Logo Section */}
+  {invoiceData.logo && (
+    <div style={{ marginBottom: "20px" }}>
+      <img
+        src={invoiceData.logo}
+        alt="Company Logo"
+        style={{
+          width: "150px",
+          height: "auto",
+          objectFit: "contain",
+          display: "block",
+          margin: "0 auto",
+        }}
+      />
+    </div>
+  )}
         <div style={{ textAlign: "right" }}>
           <p>
-            <strong>Tax invoice/Bill of Supply/Cash Meme</strong>
+            <strong>Tax Invoice/Bill of Supply/Cash Memo</strong>
           </p>
           <p>(Original for Recipient)</p>
         </div>
@@ -95,17 +102,14 @@ const InvoicePreview = ({ invoiceData, pdfUrl }) => {
         >
           <div style={{ textAlign: "left" }}>
             <p>
-              <strong>Sold By :</strong> {invoiceData.sellerName}
+              <strong>Sold By:</strong> {invoiceData.sellerName}
             </p>
             <p>{invoiceData.sellerAddress.replace(/\n/g, ", ")}</p>
             <p style={{ fontSize: "16px" }}>
-              <strong>PAN No : </strong>
-              {invoiceData.sellerPAN}
+              <strong>PAN No:</strong> {invoiceData.sellerPAN}
             </p>
             <p>
-              {" "}
-              <strong>GST Reg No: </strong>
-              {invoiceData.sellerGST}
+              <strong>GST Reg No:</strong> {invoiceData.sellerGST}
             </p>
           </div>
 
@@ -116,18 +120,18 @@ const InvoicePreview = ({ invoiceData, pdfUrl }) => {
             <p>{invoiceData.billingName}</p>
             <p>{invoiceData.billingAddress.replace(/\n/g, ", ")}</p>
             <p>
-              <strong>State/UT Code : </strong> {invoiceData.code}
+              <strong>State/UT Code:</strong> {invoiceData.stateCode}
             </p>
           </div>
-          <div></div>
-          <div style={{ textAlign: "left", marginRight: 25 }}>
+
+          <div>
             <h3 style={{ fontSize: "16px", fontWeight: "bold" }}>
               Shipping Address
             </h3>
             <p>{invoiceData.shippingName}</p>
             <p>{invoiceData.shippingAddress.replace(/\n/g, ", ")}</p>
             <p>
-              <strong>State/UT Code : </strong> {invoiceData.code}
+              <strong>State/UT Code:</strong> {invoiceData.stateCode}
             </p>
           </div>
         </div>
@@ -162,119 +166,128 @@ const InvoicePreview = ({ invoiceData, pdfUrl }) => {
 
       {/* Items Section */}
       <div style={{ marginBottom: "24px" }}>
-        <h3
-          style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "12px" }}
-        >
-          Items
-        </h3>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            fontSize: "12px",
-          }}
-        >
-          <thead style={{ backgroundColor: "#f3f3f3", fontWeight: "bold" }}>
-            <tr>
-              <th style={{ border: "1px solid #000", padding: "8px" }}>
-                Description
-              </th>
-              <th style={{ border: "1px solid #000", padding: "8px" }}>
-                Unit Price
-              </th>
-              <th style={{ border: "1px solid #000", padding: "8px" }}>
-                Quantity
-              </th>
-              <th style={{ border: "1px solid #000", padding: "8px" }}>
-                Net Amount
-              </th>
-              <th style={{ border: "1px solid #000", padding: "8px" }}>
-                Tax Rate
-              </th>
-              <th style={{ border: "1px solid #000", padding: "8px" }}>
-                Tax Amount
-              </th>
-              <th style={{ border: "1px solid #000", padding: "8px" }}>
-                Total Amount
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {invoiceData.items.map((item, index) => (
-              <tr key={index}>
-                <td style={{ border: "1px solid #000", padding: "8px" }}>
-                  {item.description}
-                </td>
-                <td style={{ border: "1px solid #000", padding: "8px" }}>
-                  {Number(item.unitPrice).toFixed(2)}
-                </td>
-                <td style={{ border: "1px solid #000", padding: "8px" }}>
-                  {item.quantity}
-                </td>
-                <td style={{ border: "1px solid #000", padding: "8px" }}>
-                  {Number(item.netAmount).toFixed(2)}
-                </td>
-                <td style={{ border: "1px solid #000", padding: "8px" }}>
-                  {item.taxRate}%
-                </td>
-                <td style={{ border: "1px solid #000", padding: "8px" }}>
-                  {Number(item.taxAmount).toFixed(2)}
-                </td>
-                <td style={{ border: "1px solid #000", padding: "8px" }}>
-                  {Number(item.totalAmount).toFixed(2)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+  <h3
+    style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "12px" }}
+  >
+    Items
+  </h3>
+  <table
+    style={{
+      width: "100%",
+      borderCollapse: "collapse",
+      fontSize: "12px",
+    }}
+  >
+    <thead style={{ backgroundColor: "#f3f3f3", fontWeight: "bold" }}>
+      <tr>
+        <th style={{ border: "1px solid #000", padding: "8px" }}>
+          Description
+        </th>
+        <th style={{ border: "1px solid #000", padding: "8px" }}>
+          Unit Price
+        </th>
+        <th style={{ border: "1px solid #000", padding: "8px" }}>
+          Quantity
+        </th>
+        <th style={{ border: "1px solid #000", padding: "8px" }}>
+          Net Amount
+        </th>
+        <th style={{ border: "1px solid #000", padding: "8px" }}>
+          Tax Rate
+        </th>
+        <th style={{ border: "1px solid #000", padding: "8px" }}>
+          Tax Amount
+        </th>
+        <th style={{ border: "1px solid #000", padding: "8px" }}>
+          Total Amount
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {invoiceData.items.map((item, index) => {
+        // Calculate Net Amount, Tax Amount, and Total Amount
+        const netAmount = item.unitPrice * item.quantity;
+        const taxAmount = netAmount * (item.taxRate / 100);
+        const totalAmount = netAmount + taxAmount;
+
+        return (
+          <tr key={index}>
+            <td style={{ border: "1px solid #000", padding: "8px" }}>
+              {item.description}
+            </td>
+            <td style={{ border: "1px solid #000", padding: "8px" }}>
+              {Number(item.unitPrice).toFixed(2)}
+            </td>
+            <td style={{ border: "1px solid #000", padding: "8px" }}>
+              {item.quantity}
+            </td>
+            <td style={{ border: "1px solid #000", padding: "8px" }}>
+              {Number(netAmount).toFixed(2)}
+            </td>
+            <td style={{ border: "1px solid #000", padding: "8px" }}>
+              {item.taxRate}%
+            </td>
+            <td style={{ border: "1px solid #000", padding: "8px" }}>
+              {Number(taxAmount).toFixed(2)}
+            </td>
+            <td style={{ border: "1px solid #000", padding: "8px" }}>
+              {Number(totalAmount).toFixed(2)}
+            </td>
+          </tr>
+        );
+      })}
+    </tbody>
+  </table>
+</div>
+
 
       {/* Totals Section */}
-      <div style={{ marginBottom: "24px" }}>
-        {/* <h3 style={{ fontSize: "16px", fontWeight: "bold" }}>Totals</h3>
-        <p>
-          <strong>Subtotal:</strong> {Number(invoiceData.subtotal).toFixed(2)}
-        </p>
-        <p>
-          <strong>Tax:</strong> {Number(invoiceData.tax).toFixed(2)}
-        </p> */}
-        <p>
-          <strong>Total:</strong> {Number(invoiceData.total).toFixed(2)}
-        </p>
-      </div>
+<div style={{ marginBottom: "24px" }}>
+  <p>
+    <strong>Total:</strong> 
+    {Number(
+      invoiceData.items.reduce((acc, item) => {
+        const netAmount = item.unitPrice * item.quantity;
+        const taxAmount = netAmount * (item.taxRate / 100);
+        const totalAmount = netAmount + taxAmount;
+        return acc + totalAmount;
+      }, 0)
+    ).toFixed(2)}
+  </p>
+</div>
 
+      {/* Signature Section */}
       {invoiceData.signature && (
-        <div className="mt-8">
-          <h2 className="text-m font-semibold right-0 text-end">
-            For {invoiceData.sellerName} :
-          </h2>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginTop: "10px",
-            }}
-          >
-            <img
-              style={{
-                width: "300px",
-                height: "40px",
-                objectFit: "cover",
-                border: "1px solid #000",
-                borderRadius: "1px",
-                padding: "1px", 
-              }}
-              src={invoiceData.signature}
-              alt="Signature"
-            />
-          </div>
-          <h2 className="text-m font-semibold right-0 text-end">
-            Authorized Signature
-          </h2>
-        </div>
-      )}
+    <div style={{ marginTop: "40px" }}>
+      <h2 style={{ textAlign: "right", marginBottom: "10px" }}>
+        For {invoiceData.sellerName}:
+      </h2>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginBottom: "10px",
+        }}
+      >
+        <img
+          style={{
+            width: "150px",
+            height: "auto",
+            objectFit: "cover",
+            border: "1px solid #000",
+            borderRadius: "2px",
+            padding: "2px",
+          }}
+          src={invoiceData.signature}
+          alt="Signature"
+        />
+      </div>
+      <h2 style={{ textAlign: "right", marginTop: "10px" }}>
+        Authorized Signature
+      </h2>
+    </div>
+  )}
 
-     
       <div style={{ textAlign: "left" }}>
         <button
           id="generate-pdf-button"
