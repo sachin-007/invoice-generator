@@ -3,6 +3,11 @@ import axios from 'axios';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 
 const Login = () => {
+
+  const handleRedirect = () => {
+    window.location.href = 'https://app.invoicing.co/#/register';
+  };
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -56,7 +61,7 @@ const Login = () => {
                   autoComplete="email"
                   required
                   className="appearance-none rounded-none relative block w-full px-3 py-2 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Email address"
+                  placeholder="use now projectseekrs@gmail.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -77,7 +82,7 @@ const Login = () => {
                   autoComplete="current-password"
                   required
                   className="appearance-none rounded-none relative block w-full px-3 py-2 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Password"
+                  placeholder="use Project@600"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
@@ -92,9 +97,13 @@ const Login = () => {
                     <Eye className="h-5 w-5 text-gray-400" />
                   )}
                 </button>
+
+                
               </div>
             </div>
           </div>
+
+       
 
           <div className="flex items-center justify-between">
             <div className="flex items-center">
@@ -116,6 +125,7 @@ const Login = () => {
             </div> */}
           </div>
 
+
           <div>
             <button
               type="submit"
@@ -129,6 +139,13 @@ const Login = () => {
             </button>
           </div>
         </form>
+
+        <button
+      onClick={handleRedirect}
+      className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+    >
+      Register Yourself
+    </button>
 
         {errorMessage && (
           <div className="mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
